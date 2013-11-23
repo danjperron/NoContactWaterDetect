@@ -26,4 +26,5 @@ MODBUS Version
 - CheckM.py        Python code which display how to read frequency of 4 modules.
 - CheckModbus.py   Python code to read one module.
 - TestSlave127.py  Python code to check cpu after program burn.
+- SlaveAddress.py  Python code to change module slave address.
 
