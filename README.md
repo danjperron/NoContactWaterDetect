@@ -13,18 +13,25 @@ Schematic
 
 MODBUS Version
 
-- modbuslayout.png  Raspberry Pi Modbus layout with water detect module
-- rs485switch.c	  Source code to interface Raspberry Pi with RS-485 module
-- rs485switch.hex  Hex file version of the compile source code
-- RS485Switch.png  Raspberry Pi interface schematic
+- modbuslayout.png  	Raspberry Pi Modbus layout with water detect module
+- rs485switch.c	  	Source code to interface Raspberry Pi with RS-485 module
+- rs485switch.hex  	Hex file version of the compile source code
+- RS485Switch.png  	Raspberry Pi interface schematic
 
 - WaterDetectModbus.c   Source code of water detect module
-- CRC16.c			   CRC 16 bit algorithm source code
+- CRC16.c		CRC 16 bit algorithm source code
 - WaterDetectModbus.hex Hex file of the compile source code
 - WaterDetectRs485.png  Pic Water Detect module schematic
 
-- CheckM.py        Python code which display how to read frequency of 4 modules.
-- CheckModbus.py   Python code to read one module.
-- TestSlave127.py  Python code to check cpu after program burn.
-- SlaveAddress.py  Python code to change module slave address.
+- CheckM.py        	Python code which display how to read frequency of 4 modules.
+- CheckModbus.py   	Python code to read one module.
+- TestSlave127.py  	Python code to check cpu after program burn.
+- SlaveAddress.py  	Python code to change module slave address.
 
+WEB Interface
+
+- WebModbus.py     	Python code for webiopi
+- index.html       	html main 
+- index.fr.html    	html main in french
+- ModbusSettings.html   html settings
+- ModbusSettings.fr.html html settings in french
