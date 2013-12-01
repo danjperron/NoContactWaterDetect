@@ -47,7 +47,7 @@
         var ModbusModule= getUrlParameters("m","",true);
 
         function ModbusCallBack(macro, args, data) {
-            var IdName = "Register"+args[2];
+            var IdName = "Registre"+args[2];
             var x=document.getElementById(IdName);
                 x.value= data;
            CallBackReady= true;
@@ -88,34 +88,34 @@
         }
 
 
-        function CreateModuleItemTable(Description,Register){
-        document.write("<tr><td style=\"text-align:center;\" >",Description,"</td><td style=\"text-align:center;\" ><input id=\"Register",Register,"\"/></td></tr>");
+        function CreateModuleItemTable(Description,Registre){
+        document.write("<tr><td style=\"text-align:center;\" >",Description,"</td><td style=\"text-align:center;\" ><input id=\"Registre",Registre,"\"/></td></tr>");
         }
 
 
         function ApplyChanges() {
-           ModbusWriteRegister(ModbusModule,6,0,document.getElementById("Register0").value);
-           ModbusWriteRegister(ModbusModule,6,1,document.getElementById("Register1").value);
+           ModbusWriteRegister(ModbusModule,6,0,document.getElementById("Registre0").value);
+           ModbusWriteRegister(ModbusModule,6,1,document.getElementById("Registre1").value);
 	   setTimeout(function(){history.go(-1);},1000);
           }
         </script>
 </head>
 <body>
 
-<h1>Hysteresis Configuration</h1>
+<h1>Hyst&eacute;r&eacute;sis configuration</h1>
 
 <!--  creation du tableau -->
 <script type="text/javascript">
-  CreateHeaderTable("Module"+ModbusModule,[" Property ", " Frequency "]);
-  CreateModuleItemTable(" Air ",0);
-  CreateModuleItemTable(" Water ",1);
+  CreateHeaderTable("Module"+ModbusModule,["&nbsp;Propriété&nbsp;", "&nbsp;Fréquence&nbsp"]);
+  CreateModuleItemTable("&nbsp;Air libre&nbsp;",0);
+  CreateModuleItemTable("&nbsp;Eau&nbsp;",1);
 </script>
 </table>
 <br><br>
 <table><col width="40%"><col width="30%"><col width="30%">
 <tr><td/>
-<td> <button class="btn"  onclick="javascript: history.go(-1)"> Cancel </button></td>
-<td> <button class="btn"  onclick="ApplyChanges()"> Apply </button></td>
+<td> <button class="btn"  onclick="javascript: history.go(-1)"> Annuler</button></td>
+<td> <button class="btn"  onclick="ApplyChanges()"> Modifier</button></td>
 </tr></table>
 </body>
 </html>

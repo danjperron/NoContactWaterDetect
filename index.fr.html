@@ -21,7 +21,7 @@
 
          function ModbusSettings(SlaveAddress)
           {
-            location.href = "ModbusSettings.html?m=" + SlaveAddress;
+            location.href = "ModbusSettings.fr.html?m=" + SlaveAddress;
           }
 
         function CreateHeaderTable(Title, ColumnTitle) {
@@ -35,7 +35,7 @@
         function CreateModuleItemTable(SlaveModule){
         document.write("<tr><td style=\"text-align:center;\" >",SlaveModule,"</td><td style=\"text-align:center;\" ><div id=\"Slave",SlaveModule,"Frequency\"></div></td>");
         document.write("<td style=\"text-align:center;\" id=\"Slave",SlaveModule,"Status\"/>");
-        document.write("<td style=\"text-align:center;\"><button class=\"btn\" width=\"*\"  onclick=\"ModbusSettings(",SlaveModule,")\">Settings</button></td></tr>");
+        document.write("<td style=\"text-align:center;\"><button class=\"btn\" width=\"*\"  onclick=\"ModbusSettings(",SlaveModule,")\">Modifier</button></td></tr>");
         }
          
         function ModbusCallBack(macro, args, data) {
@@ -57,12 +57,12 @@
               if(Wdtect)
                 {
                    x.style.backgroundColor="#8080ff";
-                   x.innerHTML= "WATER";
+                   x.innerHTML= "EAU";
                 }
                 else
                 {
                    x.style.backgroundColor="#FF8080";
-                   x.innerHTML= "EMPTY";
+                   x.innerHTML= "VIDE";
                 }
 
              }
@@ -96,17 +96,19 @@
 
 </head>
 <body>
-<h1>Modbus Water Detector</h1><br>
+<h1>Détecteur d'eau  utilisant Modbus</h1><br>
 
 
+<!--  creation du tableau -->
 <script type="text/javascript">
  
-  CreateHeaderTable("Detection Modules",["&nbsp;Address&nbsp;<br>&nbsp;Modbus&nbsp;", "&nbsp;Detected&nbsp;<br>Frequency", "&nbsp;Status&nbsp;", "&nbsp;hysteresis&nbsp;"]);
+  CreateHeaderTable("Modules de détection",["&nbsp;Adresse&nbsp;<br>&nbsp;Modbus&nbsp;", "&nbsp;Fréquence&nbsp;<br>détectée", "&nbsp;Status&nbsp;", "&nbsp;hystérésis&nbsp;"]);
   for(var i=0; i<ValidModuleList.length;i++)
        CreateModuleItemTable(ValidModuleList[i]);
 
 </script>
 
+<!--  fin du tableau -->
 </table>
 </body>
 </html>
