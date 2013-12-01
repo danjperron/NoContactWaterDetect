@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content = "height = device-height, width = 420, user-scalable = no" /> 
+        <title>Configuration hysteresys</title>
+
+
+
+       <script type="text/javascript" src="/webiopi.js"></script>
+
+       <style type="text/css">
+	.btn{width: auto; height: auto; padding: 0;font:normal 14px/20px helvetica,arial,sans-serif;
+	    color: #000000;border: #d0d0d0;border-style: outset;border-width: 3px;}
+        </style>
+
+        <script type="text/javascript">
+
+
+	function getUrlParameters(parameter, staticURL, decode){
+   	/*
+    	 Function: getUrlParameters
+    	 Description: Get the value of URL parameters either from 
+                 current URL or static URL
+    	 Author: Tirumal
+    	 URL: www.code-tricks.com
+   	*/
+
+   	var currLocation = (staticURL.length)? staticURL : window.location.search,
+       	parArr = currLocation.split("?")[1].split("&"),
+       	returnBool = true;
+   
+   	for(var i = 0; i < parArr.length; i++){
+          parr = parArr[i].split("=");
+          if(parr[0] == parameter){
+            return (decode) ? decodeURIComponent(parr[1]) : parr[1];
+            returnBool = true;
+          }else{
+            returnBool = false;            
+          }
+        }
+   
+         if(!returnBool) return false;  
+        }
+
+
+        var ModbusModule= getUrlParameters("m","",true);
+
+        function ModbusCallBack(macro, args, data) {
+            var IdName = "Registre"+args[2];
+            var x=document.getElementById(IdName);
+                x.value= data;
+           CallBackReady= true;
+         }
+
+        function ModbusReadRegister(SlaveAddress, Function, Register) {
+         var args =[SlaveAddress,Function,Register];
+         webiopi().callMacro("ModbusReadRegister",args,ModbusCallBack);
+         }
+
+        function ModbusWriteRegister(SlaveAddress, Function, Register, Value) {
+         var args = [SlaveAddress, Function, Register, Value];
+         webiopi().callMacro("ModbusWriteRegister",args);
+         }
+
+
+
+
+
+         function ModbusReadAll()
+          {
+               // read Air Frequency
+               ModbusReadRegister(ModbusModule,3,0);
+               // read Water Frequency
+               ModbusReadRegister(ModbusModule,3,1);
+        }
+
+
+        webiopi().ready(function(){ModbusReadAll();});
+
+
+  	function CreateHeaderTable(Title, ColumnTitle) {
+        var NumberOfColumn = ColumnTitle.length;
+        document.write("<table style=\"padding: 2px;\" border=\"1\"><tr><td style=\"text-align:center;\" colspan=\"", NumberOfColumn, "\"><h2>",Title,"</h2></td></tr><tr>");
+        for(var i=0;i<NumberOfColumn;i++)
+          document.write("<td style=\"text-align:center;\" >",ColumnTitle[i],"</td>");
+        document.write("</tr>");
+        }
+
+
+        function CreateModuleItemTable(Description,Registre){
+        document.write("<tr><td style=\"text-align:center;\" >",Description,"</td><td style=\"text-align:center;\" ><input id=\"Registre",Registre,"\"/></td></tr>");
+        }
+
+
+        function ApplyChanges() {
+           ModbusWriteRegister(ModbusModule,6,0,document.getElementById("Registre0").value);
+           ModbusWriteRegister(ModbusModule,6,1,document.getElementById("Registre1").value);
+	   setTimeout(function(){history.go(-1);},1000);
+          }
+        </script>
+</head>
+<body>
+
+<h1>Hyst&eacute;r&eacute;sis configuration</h1>
+
+<!--  creation du tableau -->
+<script type="text/javascript">
+  CreateHeaderTable("Module"+ModbusModule,["&nbsp;Propriété&nbsp;", "&nbsp;Fréquence&nbsp"]);
+  CreateModuleItemTable("&nbsp;Air libre&nbsp;",0);
+  CreateModuleItemTable("&nbsp;Eau&nbsp;",1);
+</script>
+</table>
+<br><br>
+<table><col width="40%"><col width="30%"><col width="30%">
+<tr><td/>
+<td> <button class="btn"  onclick="javascript: history.go(-1)"> Annuler</button></td>
+<td> <button class="btn"  onclick="ApplyChanges()"> Modifier</button></td>
+</tr></table>
+</body>
+</html>
+

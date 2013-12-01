@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content = "height = device-height, width = 420, user-scalable = no" /> 
+        <title>Modbus Water Detect</title>
+
+
+
+       <script type="text/javascript" src="/webiopi.js"></script>
+
+   <style type="text/css">
+
+	.btn{width: auto; height: auto; padding: 0;font:normal 14px/20px helvetica,arial,sans-serif;
+		color: #000000;border: #d0d0d0;border-style: outset;border-width: 3px;}
+    </style>
+
+        <script type="text/javascript">
+         // List  of Valid Modbus modules
+         var ValidModuleList = [1,2,7,8];
+
+         function ModbusSettings(SlaveAddress)
+          {
+            location.href = "ModbusSettings.html?m=" + SlaveAddress;
+          }
+
+        function CreateHeaderTable(Title, ColumnTitle) {
+        var NumberOfColumn = ColumnTitle.length;
+        document.write("<table style=\"padding: 2px;\" border=\"1\"><tr><td style=\"text-align:center;\" colspan=\"", NumberOfColumn, "\"><h2>",Title,"</h2></td></tr><tr>");
+        for(var i=0;i<NumberOfColumn;i++)
+          document.write("<td style=\"text-align:center;\" >",ColumnTitle[i],"</td>");
+        document.write("</tr>");
+        }
+
+        function CreateModuleItemTable(SlaveModule){
+        document.write("<tr><td style=\"text-align:center;\" >",SlaveModule,"</td><td style=\"text-align:center;\" ><div id=\"Slave",SlaveModule,"Frequency\"></div></td>");
+        document.write("<td style=\"text-align:center;\" id=\"Slave",SlaveModule,"Status\"/>");
+        document.write("<td style=\"text-align:center;\"><button class=\"btn\" width=\"*\"  onclick=\"ModbusSettings(",SlaveModule,")\">Modifier</button></td></tr>");
+        }
+         
+        function ModbusCallBack(macro, args, data) {
+          if(args[2] == 0)
+            {
+               // Frequency signal
+              var IdName = "Slave"+args[0]+"Frequency";
+              var x=document.getElementById(IdName);
+              x.innerHTML= data;
+            }
+          else
+            {
+              // Output Signal
+              var IdName = "Slave"+args[0]+ "Status";
+              var x=document.getElementById(IdName);
+              // water detect output is PORT A bit 4 RA4 
+              // bit 4 weight is 16
+              var Wdtect = ((parseInt(data) & 16) == 16)? true : false; 
+              if(Wdtect)
+                {
+                   x.style.backgroundColor="#8080ff";
+                   x.innerHTML= "EAU";
+                }
+                else
+                {
+                   x.style.backgroundColor="#FF8080";
+                   x.innerHTML= "VIDE";
+                }
+
+             }
+         }
+
+        function ModbusReadRegister(SlaveAddress, Function, Register) {
+         var args =[SlaveAddress,Function,Register];
+         webiopi().callMacro("ModbusReadRegister",args,ModbusCallBack);
+         }
+
+
+         function ModbusReadAll()
+          {
+             for(var i=0; i < ValidModuleList.length; i++)
+              {
+               // read Frequency
+               ModbusReadRegister(ValidModuleList[i],4,0);
+               // read Port A
+               ModbusReadRegister(ValidModuleList[i],4,1);
+               }
+        }
+
+
+        webiopi().ready(function(){ModbusReadAll();
+            setInterval ( "ModbusReadAll()", 1000); 
+           });
+
+
+        </script>
+
+
+</head>
+<body>
+<h1>Détecteur d'eau  utilisant Modbus</h1><br>
+
+
+<!--  creation du tableau -->
+<script type="text/javascript">
+ 
+  CreateHeaderTable("Modules de détection",["&nbsp;Adresse&nbsp;<br>&nbsp;Modbus&nbsp;", "&nbsp;Fréquence&nbsp;<br>détectée", "&nbsp;Status&nbsp;", "&nbsp;hystérésis&nbsp;"]);
+  for(var i=0; i<ValidModuleList.length;i++)
+       CreateModuleItemTable(ValidModuleList[i]);
+
+</script>
+
+<!--  fin du tableau -->
+</table>
+</body>
+</html>
+
