@@ -19,6 +19,18 @@
 // Simple program to switch transmit/receive direction
 // on MAX-485
 //
+
+
+////////////////////////////////////////////////////////////////////////////
+//Daniel Perron Date 22 April change temporisation delay for 1.3 character instead of 2
+//
+// Version 1.01
+// 
+//
+
+
+
+
 //   Date: 14 Novembre 2013
 //   programmer: Daniel Perron
 //   Version: 1.0
@@ -69,6 +81,41 @@
 //   347.222us  => 2778 count / 32 (prescaler) = 87  (256-87)= 169
 //
 
+
+
+
+// version 1.01  1.3 character  delay instead of 2 full character
+// 
+//  8 bit , 1 stop + 1 start = 10 bit
+//  9600 BAUD =  1042 us  * 1.3  =  1354 us    1 BAUD = 104 us
+// 19200 BAUD =   521 us  * 1.3  =    677 us    1 BAUD =   50 us
+// 38400 BAUD =   260 us  * 1.3  =    339 us    1 BAUD =   26 us
+// 57600 BAUD =   174 us *  1.3  =    226 us    1 BAUD =   17 us
+// RCV_DELAY is now  1 BAUD duration so a  total of 1.4 character length delay after last low level transmission
+// PRESCALER 4  (clock/4/32)=   250Khz => 4us
+// PRESCALER 5  (clock/4/64) =  125KHz => 8us
+// PRESCALER 6  (clock/4/128) = 62.5KHz => 16us
+
+#define T0_9600_PRESCALER 6
+#define T0_9600_TIME_OUT  171
+#define T0_9600_RCV_DELAY 250
+
+#define T0_19200_PRESCALER 5
+#define T0_19200_TIME_OUT  171
+#define T0_19200_RCV_DELAY 250
+
+#define T0_38400_PRESCALER 4
+#define T0_38400_TIME_OUT  171
+#define T0_38400_RCV_DELAY 250
+
+#define T0_57600_PRESCALER 4
+#define T0_57600_TIME_OUT  200
+#define T0_57600_RCV_DELAY 252
+
+
+
+
+/* VERSION1.0   2 full character delay
 #define T0_9600_PRESCALER 6
 #define T0_9600_TIME_OUT  126
 #define T0_9600_RCV_DELAY 225
@@ -84,6 +131,10 @@
 #define T0_57600_PRESCALER 4
 #define T0_57600_TIME_OUT  169
 #define T0_57600_RCV_DELAY 234
+*/
+
+
+
 
                                      // 57600,38400,19200,9600
 const unsigned char BaudPrescaler[4]= { T0_57600_PRESCALER,\
@@ -203,7 +254,7 @@ if(TMR0IE)
 	    {
 	     // ok transmit time out
 	     OUT_ENABLE=0;       // disable transmission
-	     TMR0= T0_RcvDelay;  // Now set timer for 0.5ms delay
+	     TMR0= T0_RcvDelay;  // Now set timer for 1 baud delay
 	     TMR0IF=0;
 	     TMR0IE=1;
 	   }
@@ -259,7 +310,7 @@ OSCCON		= 0b11110000;	// 32MHz
 OPTION_REG	= T0_9600_PRESCALER;	// pullups on, TMR0 @ Fosc/4, prescaler at 128
 ANSELA		= 0b00000000;	// no analog pins
 TRISA   	= 0b11001111;   // RA4 and RA5 output
-PORTA		= 0b00000000;	// output low
+PORTA		= 0b00001111;	// output low
 WPUA		= 0b00111111;	// pull-up
 
 T0_Prescaler = T0_9600_PRESCALER;
