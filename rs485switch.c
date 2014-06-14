@@ -238,8 +238,11 @@ if(IOCIE)
       // We are in transmit mode
       IOCAFbits.IOCAF2=0;
       IN_ENABLE=1;          // disable reception
+      IN_ENABLE=1;          // fix a problem in 3.3v need to do it twice with a  nop in between
+      asm("NOP");
       OUT_ENABLE=1;         // enable transmission
-      TMR0= T0_TimeOut;     // Reset the time out timer with correct delay
+      OUT_ENABLE=1;
+TMR0= T0_TimeOut;     // Reset the time out timer with correct delay
       TMR0IF=0;        	    // clear the timer flag
       TMR0IE=1;             // enable interrupt for time out
     }
